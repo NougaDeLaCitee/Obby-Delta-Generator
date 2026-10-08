@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delta Executor - Générateur d'Obby Roblox Avancé</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        delta: {
+                            900: '#07040f',
+                            800: '#110a21',
+                            700: '#1a1036',
+                            600: '#27194f',
+                            500: '#3c237a',
+                            400: '#6b36d4',
+                            300: '#9053f1',
+                            200: '#b88ffa',
+                            100: '#e5d9fd',
+                        },
+                        neon: {
+                            purple: '#9d4edd',
+                            cyan: '#00f5ff',
+                            pink: '#ff007f',
+                        }
+                    },
+                    boxShadow: {
+                        'neon-purple': '0 0 25px rgba(157, 78, 221, 0.45)',
+                        'neon-cyan': '0 0 25px rgba(0, 245, 255, 0.45)',
+                        'neon-pink': '0 0 25px rgba(255, 0, 127, 0.45)',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #07040f;
+            color: #e5d9fd;
+            overflow-x: hidden;
+        }
+        .code-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #110a21;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3c237a;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6b36d4;
+        }
+        .cyber-grid {
+            background-image: linear-gradient(to right, rgba(157, 78, 221, 0.04) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(157, 78, 221, 0.04) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+    </style>
+</head>
+<body class="cyber-grid min-h-screen flex flex-col selection:bg-neon-purple selection:text-white">
+
+    <!-- Header / Navbar -->
+    <header class="border-b border-delta-700 bg-delta-900/85 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-neon-purple to-delta-400 flex items-center justify-center shadow-neon-purple">
+                    <i class="fa-solid fa-cube text-white text-xl"></i>
+                </div>
+                <div>
+                    <span class="text-xl font-bold tracking-wider bg-gradient-to-r from-white via-delta-200 to-neon-purple bg-clip-text text-transparent">DELTA EXECUTOR</span>
+                    <span class="block text-xs font-semibold text-neon-purple tracking-widest uppercase">Obby Studio Pro</span>
+                </div>
+            </div>
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="#generator" class="text-sm font-medium hover:text-neon-purple transition-colors">Générateur</a>
+                <a href="#editor-section" class="text-sm font-medium hover:text-neon-purple transition-colors">Script LuaU</a>
+                <a href="#simulator" class="text-sm font-medium hover:text-neon-cyan transition-colors flex items-center gap-1.5"><i class="fa-solid fa-gamepad text-neon-cyan"></i> Aperçu 3D</a>
+                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-delta-700/60 border border-neon-purple/30 text-neon-cyan flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Luau v5.1 Prêt
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center relative">
+        <div class="absolute inset-0 -z-10 flex items-center justify-center opacity-30 pointer-events-none">
+            <div class="w-[500px] h-[500px] bg-neon-purple rounded-full blur-[130px]"></div>
+        </div>
+        <div class="inline-block mb-4 px-4 py-1.5 rounded-full border border-neon-purple/40 bg-delta-800/50 text-xs sm:text-sm text-delta-200 backdrop-blur-sm shadow-neon-purple">
+            🚀 Génération intelligente : spawn instantané devant la caméra ou le HumanoidRootPart
+        </div>
+        <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight mb-4">
+            Créez votre <span class="bg-gradient-to-r from-neon-cyan via-neon-purple to-neon-pink bg-clip-text text-transparent">Obby Roblox</span> parfait
+        </h1>
+        <p class="max-w-2xl mx-auto text-delta-200/80 text-base sm:text-lg mb-6">
+            Ce script calcule précisément la direction de votre personnage pour aligner un parcours complet avec pièges, lasers rotatifs, plateformes mouvantes et checkpoints.
+        </p>
+    </section>
+
+    <!-- Main Grid -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Controls Panel -->
+        <div id="generator" class="lg:col-span-5 bg-delta-800/60 border border-delta-700 rounded-2xl p-6 backdrop-blur-md shadow-2xl flex flex-col gap-6">
+            <div class="flex items-center justify-between border-b border-delta-700 pb-4">
+                <h2 class="text-lg font-semibold flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-neon-purple"></i> Paramètres de l'Obby
+                </h2>
+                <button onclick="resetOptions()" class="text-xs text-delta-300 hover:text-white transition-colors">Réinitialiser</button>
+            </div>
+
+            <!-- Stage Count -->
+            <div class="space-y-2">
+                <div class="flex justify-between text-sm">
+                    <label for="stageCount" class="font-medium text-delta-200">Nombre d'Étapes (Stages)</label>
+                    <span id="stageCountVal" class="font-bold text-neon-cyan code-font">15</span>
+                </div>
+                <input type="range" id="stageCount" min="5" max="60" value="15" 
+                    class="w-full accent-neon-purple bg-delta-900 rounded-lg appearance-none h-2 cursor-pointer"
+                    oninput="updateConfig()">
+                <p class="text-xs text-delta-300">Longueur totale du parcours généré en avant de vous.</p>
+            </div>
+
+            <!-- Difficulty -->
+            <div class="space-y-2">
+                <label class="font-medium text-delta-200 text-sm block">Niveau de Difficulté</label>
+                <div class="grid grid-cols-3 gap-3">
+                    <button type="button" onclick="setDifficulty('easy')" id="btn-easy" class="diff-btn py-2.5 px-3 rounded-xl border border-delta-700 bg-delta-900 text-xs font-semibold hover:border-neon-purple transition-all flex flex-col items-center gap-1">
+                        <i class="fa-solid fa-face-smile text-emerald-400"></i> Facile
+                    </button>
+                    <button type="button" onclick="setDifficulty('medium')" id="btn-medium" class="diff-btn py-2.5 px-3 rounded-xl border border-neon-purple bg-delta-700 text-xs font-semibold shadow-neon-purple transition-all flex flex-col items-center gap-1">
+                        <i class="fa-solid fa-face-meh text-amber-400"></i> Moyen
+                    </button>
+                    <button type="button" onclick="setDifficulty('hard')" id="btn-hard" class="diff-btn py-2.5 px-3 rounded-xl border border-delta-700 bg-delta-900 text-xs font-semibold hover:border-neon-purple transition-all flex flex-col items-center gap-1">
+                        <i class="fa-solid fa-face-dizzy text-rose-400"></i> Extrême
+                    </button>
+                </div>
+            </div>
+
+            <!-- Modules -->
+            <div class="space-y-3 pt-2 border-t border-delta-700">
+                <span class="font-medium text-delta-200 text-sm block">Modules Dynamiques Inclus</span>
+                
+                <label class="flex items-center justify-between p-3 rounded-xl bg-delta-900/60 border border-delta-700 cursor-pointer hover:border-neon-purple/50 transition-colors">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center">
+                            <i class="fa-solid fa-skull"></i>
+                        </div>
+                        <div>
+                            <span class="text-sm font-medium block">Kill Bricks (Pièges mortels)</span>
+                            <span class="text-xs text-delta-300">Tuer le joueur au contact</span>
+                        </div>
+                    </div>
+                    <input type="checkbox" id="featureKillBricks" checked onchange="updateConfig()" class="w-4 h-4 accent-neon-purple rounded cursor-pointer">
+                </label>
+
+                <label class="flex items-center justify-between p-3 rounded-xl bg-delta-900/60 border border-delta-700 cursor-pointer hover:border-neon-purple/50 transition-colors">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-neon-cyan flex items-center justify-center">
+                            <i class="fa-solid fa-arrows-rotate"></i>
+                        </div>
+                        <div>
+                            <span class="text-sm font-medium block">Lasers Tournants</span>
+                            <span class="text-xs text-delta-300">Poutres rotatives en boucle</span>
+                        </div>
+                    </div>
+                    <input type="checkbox" id="featureLasers" checked onchange="updateConfig()" class="w-4 h-4 accent-neon-purple rounded cursor-pointer">
+                </label>
+
+                <label class="flex items-center justify-between p-3 rounded-xl bg-delta-900/60 border border-delta-700 cursor-pointer hover:border-neon-purple/50 transition-colors">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-purple-500/20 text-neon-purple flex items-center justify-center">
+                            <i class="fa-solid fa-bridge"></i>
+                        </div>
+                        <div>
+                            <span class="text-sm font-medium block">Plateformes Disparaissantes</span>
+                            <span class="text-xs text-delta-300">Effet clignotant & traversable</span>
+                        </div>
+                    </div>
+                    <input type="checkbox" id="featureVanishing" checked onchange="updateConfig()" class="w-4 h-4 accent-neon-purple rounded cursor-pointer">
+                </label>
+
+                <label class="flex items-center justify-between p-3 rounded-xl bg-delta-900/60 border border-delta-700 cursor-pointer hover:border-neon-purple/50 transition-colors">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center">
+                            <i class="fa-solid fa-flag-checkered"></i>
+                        </div>
+                        <div>
+                            <span class="text-sm font-medium block">Checkpoints & Victoire</span>
+                            <span class="text-xs text-delta-300">Sauvegarde et trophée final</span>
+                        </div>
+                    </div>
+                    <input type="checkbox" id="featureCheckpoints" checked onchange="updateConfig()" class="w-4 h-4 accent-neon-purple rounded cursor-pointer">
+                </label>
+            </div>
+
+            <button onclick="generateScript()" class="w-full py-4 rounded-xl bg-gradient-to-r from-neon-purple to-delta-400 hover:from-neon-purple hover:to-neon-cyan text-white font-bold shadow-neon-purple transition-all duration-300 flex items-center justify-center gap-2 group">
+                <i class="fa-solid fa-wand-magic-sparkles group-hover:rotate-12 transition-transform"></i> Générer le Script LuaU
+            </button>
+        </div>
+
+        <!-- Editor Panel -->
+        <div id="editor-section" class="lg:col-span-7 flex flex-col gap-4">
+            <div class="bg-delta-800/60 border border-delta-700 rounded-2xl p-6 backdrop-blur-md shadow-2xl flex-1 flex flex-col">
+                
+                <div class="flex items-center justify-between pb-4 border-b border-delta-700 mb-4">
+                    <div class="flex items-center space-x-2">
+                        <div class="flex space-x-1.5">
+                            <div class="w-3 h-3 rounded-full bg-rose-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                        </div>
+                        <span class="text-xs font-mono text-delta-300 ml-2">delta_obby_master.lua</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="copyCode()" id="copyBtn" class="px-3.5 py-1.5 rounded-lg bg-delta-700 hover:bg-delta-600 border border-neon-purple/40 text-xs font-semibold text-white flex items-center gap-1.5 transition-all shadow-sm">
+                            <i class="fa-regular fa-copy text-neon-cyan"></i> Copier le Code
+                        </button>
+                    </div>
+                </div>
+
+                <div class="relative flex-1 min-h-[440px] rounded-xl bg-delta-900 border border-delta-700 overflow-hidden flex flex-col">
+                    <div class="absolute top-0 left-0 bottom-0 w-12 bg-delta-900/90 border-r border-delta-800 flex flex-col items-center py-4 text-xs font-mono text-delta-300/40 select-none space-y-1" id="lineNumbers"></div>
+                    <textarea id="luaCodeOutput" readonly class="w-full h-full bg-transparent text-delta-100 code-font text-xs sm:text-sm p-4 pl-16 resize-none focus:outline-none leading-relaxed" spellcheck="false"></textarea>
+                </div>
+
+                <div id="toastMessage" class="hidden mt-4 p-3 rounded-xl bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs flex items-center gap-2 transition-all">
+                    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                    <span>Script LuaU copié dans le presse-papier avec succès ! Collez-le dans Delta.</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Simulator Section (Interactive 2D/3D Mockup Preview) -->
+    <section id="simulator" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 w-full">
+        <div class="bg-delta-800/80 border border-delta-700 rounded-2xl p-6 sm:p-8 backdrop-blur-md shadow-2xl">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-delta-700 gap-4 mb-6">
+                <div>
+                    <h2 class="text-2xl font-bold flex items-center gap-2.5">
+                        <i class="fa-solid fa-gamepad text-neon-cyan"></i> Simulateur Interactif de l'Obby
+                    </h2>
+                    <p class="text-xs text-delta-300 mt-1">Visualisez l'alignement des plateformes générées en temps réel avant exécution dans Roblox.</p>
+                </div>
+                <button onclick="runSimulatorSimulation()" class="px-5 py-2.5 rounded-xl bg-delta-700 hover:bg-delta-600 border border-neon-cyan/40 text-xs font-bold text-neon-cyan flex items-center gap-2 transition-all shadow-neon-cyan">
+                    <i class="fa-solid fa-play"></i> Lancer la Simulation
+                </button>
+            </div>
+
+            <!-- Canvas Container -->
+            <div class="relative w-full h-[320px] rounded-xl bg-delta-900 border border-delta-700 overflow-hidden flex items-center justify-center">
+                <canvas id="simCanvas" class="w-full h-full block cursor-grab"></canvas>
+                <div id="simOverlay" class="absolute inset-0 bg-delta-900/80 flex flex-col items-center justify-center p-6 text-center transition-opacity">
+                    <div class="w-16 h-16 rounded-2xl bg-neon-purple/20 border border-neon-purple/40 text-neon-purple flex items-center justify-center text-2xl mb-3 shadow-neon-purple animate-bounce">
+                        <i class="fa-solid fa-cube"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1">Simulateur Prêt</h3>
+                    <p class="text-xs text-delta-300 max-w-md mb-4">Cliquez sur le bouton ci-dessus pour simuler la construction instantanée du parcours devant le joueur.</p>
+                    <button onclick="runSimulatorSimulation()" class="px-6 py-3 rounded-xl bg-gradient-to-r from-neon-cyan to-neon-purple text-white font-bold text-xs shadow-neon-cyan transition-all">
+                        Générer l'aperçu 3D
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="mt-auto border-t border-delta-700 bg-delta-900 py-8 text-center text-xs text-delta-300">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p>Delta Executor Obby Generator Pro &copy; 2026. Compatible avec tous les scripts Luau récents.</p>
+            <div class="flex items-center space-x-4">
+                <span class="hover:text-neon-purple transition-colors cursor-pointer">Sécurité Exécuteur</span>
+                <span class="hover:text-neon-purple transition-colors cursor-pointer">Documentation API</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script Application Logic -->
+    <script>
+        let currentDifficulty = 'medium';
+
+        function setDifficulty(diff) {
+            currentDifficulty = diff;
+            document.querySelectorAll('.diff-btn').forEach(btn => {
+                btn.classList.remove('border-neon-purple', 'bg-delta-700', 'shadow-neon-purple');
+                btn.classList.add('border-delta-700', 'bg-delta-900');
+            });
+            const activeBtn = document.getElementById(`btn-${diff}`);
+            activeBtn.classList.remove('border-delta-700', 'bg-delta-900');
+            activeBtn.classList.add('border-neon-purple', 'bg-delta-700', 'shadow-neon-purple');
+            generateScript();
+        }
+
+        function updateConfig() {
+            const val = document.getElementById('stageCount').value;
+            document.getElementById('stageCountVal').innerText = val;
+            generateScript();
+        }
+
+        function generateScript() {
+            const stages = document.getElementById('stageCount').value;
+            const useKillBricks = document.getElementById('featureKillBricks').checked;
+            const useLasers = document.getElementById('featureLasers').checked;
+            const useVanishing = document.getElementById('featureVanishing').checked;
+            const useCheckpoints = document.getElementById('featureCheckpoints').checked;
+
+            let lua = `--[[
+    Delta Executor - Advanced Obby Generator Studio v3.0
+    Généré automatiquement le ${new Date().toLocaleDateString()}
+    Étapes: ${stages} | Difficulté: ${currentDifficulty.toUpperCase()}
+]]--
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local rootPart = character:WaitForChild("HumanoidRootPart")
+
+-- Nettoyage de l'ancien obby si existant
+if workspace:FindFirstChild("DeltaGeneratedObby") then
+    workspace.DeltaGeneratedObby:Destroy()
+end
+
+local obbyFolder = Instance.new("Folder")
+obbyFolder.Name = "DeltaGeneratedObby"
+obbyFolder.Parent = workspace
+
+-- Calcul précis de la position et de l'orientation devant le joueur
+local lookVector = rootPart.CFrame.LookVector
+local spawnPos = rootPart.Position + (Vector3.new(lookVector.X, 0, lookVector.Z).Unit * 8) + Vector3.new(0, 1, 0)
+local currentPos = spawnPos
+
+print("[Delta Obby] Construction du parcours de ${stages} étapes en cours...")
+
+local difficulty = "${currentDifficulty}"
+local spacing = difficulty == "easy" and 14 or (difficulty == "medium" and 18 or 22)
+local platformSize = difficulty == "easy" and Vector3.new(7, 1, 7) or (difficulty == "medium" and Vector3.new(5, 1, 5) or Vector3.new(3.5, 1, 3.5))
+
+-- Plateforme de départ sécurisée
+local startPad = Instance.new("Part")
+startPad.Size = Vector3.new(10, 1, 10)
+startPad.Position = currentPos - Vector3.new(0, 1, 0)
+startPad.Anchored = true
+startPad.BrickColor = BrickColor.new("Lime green")
+startPad.Material = Enum.Material.Neon
+startPad.Parent = obbyFolder
+startPad.Name = "StartPlatform"
+
+for i = 1, ${stages} do
+    -- Variation de hauteur dynamique selon la difficulté
+    local heightOffset = difficulty == "easy" and math.random(0, 1) or (difficulty == "medium" and math.random(-1, 2) or math.random(-2, 3))
+    currentPos = currentPos + Vector3.new(0, heightOffset, spacing)
+    
+    local part = Instance.new("Part")
+    part.Size = platformSize
+    part.Position = currentPos
+    part.Anchored = true
+    part.BrickColor = BrickColor.random()
+    part.Material = Enum.Material.SmoothPlastic
+    part.Parent = obbyFolder
+    part.Name = "Stage_" .. i
+
+    ${useKillBricks ? `
+    -- Ajout de Kill Bricks (Pièges mortels)
+    if math.random(1, 3) == 1 then
+        local hazard = Instance.new("Part")
+        hazard.Size = Vector3.new(platformSize.X * 0.75, 0.5, 1.2)
+        hazard.Position = currentPos + Vector3.new(0, 0.8, 0)
+        hazard.Anchored = true
+        hazard.BrickColor = BrickColor.new("Really red")
+        hazard.Material = Enum.Material.Neon
+        hazard.Parent = obbyFolder
+        
+        hazard.Touched:Connect(function(hit)
+            local char = hit.Parent
+            local hum = char:FindFirstChildOfClass("Humanoid")
+            if hum and char == player.Character then
+                hum.Health = 0
+            end
+        end)
+    end
+    ` : ''}
+
+    ${useLasers ? `
+    -- Lasers tournants animés
+    if ${useLasers ? 'true' : 'false'} and (i % 2 == 0) then
+        local laser = Instance.new("Part")
+        laser.Size = Vector3.new(12, 0.4, 0.8)
+        laser.Position = currentPos + Vector3.new(0, 2.5, 0)
+        laser.Anchored = true
+        laser.BrickColor = BrickColor.new("Cyan")
+        laser.Material = Enum.Material.Neon
+        laser.Parent = obbyFolder
+
+        laser.Touched:Connect(function(hit)
+            local hum = hit.Parent:FindFirstChildOfClass("Humanoid")
+            if hum and hit.Parent == player.Character then
+                hum.Health = 0
+            end
+        end)
+
+        task.spawn(function()
+            while laser and laser.Parent do
+                laser.CFrame = laser.CFrame * CFrame.Angles(0, 0.06, 0)
+                task.wait()
+            end
+        end)
+    end
+    ` : ''}
+
+    ${useVanishing ? `
+    -- Plateformes disparaissantes clignotantes
+    if ${useVanishing ? 'true' : 'false'} and (i % 3 == 0) then
+        task.spawn(function()
+            while part and part.Parent do
+                part.Transparency = 0.8
+                part.CanCollide = false
+                task.wait(2)
+                if not part or not part.Parent then break end
+                part.Transparency = 0
+                part.CanCollide = true
+                task.wait(2)
+            end
+        end)
+    end
+    ` : ''}
+
+    ${useCheckpoints ? `
+    -- Checkpoints tous les 5 stages
+    if i % 5 == 0 then
+        local cp = Instance.new("Part")
+        cp.Size = Vector3.new(platformSize.X, 0.4, platformSize.Z)
+        cp.Position = currentPos + Vector3.new(0, 0.6, 0)
+        cp.Anchored = true
+        cp.BrickColor = BrickColor.new("Bright yellow")
+        cp.Material = Enum.Material.Neon
+        cp.Parent = obbyFolder
+        cp.Name = "Checkpoint_" .. i
+
+        cp.Touched:Connect(function(hit)
+            local char = hit.Parent
+            local hum = char:FindFirstChildOfClass("Humanoid")
+            if hum and char == player.Character then
+                cp.BrickColor = BrickColor.new("Deep blue")
+                print("[Delta Obby] Checkpoint validé à l'étape " .. i)
+            end
+        end)
+    end
+    ` : ''}
+end
+
+-- Trophée final de victoire
+local endPos = currentPos + Vector3.new(0, 0, spacing)
+local winPart = Instance.new("Part")
+winPart.Size = Vector3.new(6, 4, 6)
+winPart.Position = endPos + Vector3.new(0, 2, 0)
+winPart.Anchored = true
+winPart.BrickColor = BrickColor.new("Bright orange")
+winPart.Material = Enum.Material.Neon
+winPart.Parent = obbyFolder
+winPart.Name = "VictoryTrophy"
+
+winPart.Touched:Connect(function(hit)
+    local hum = hit.Parent:FindFirstChildOfClass("Humanoid")
+    if hum and hit.Parent == player.Character then
+        print("[Delta Obby] Félicitations ! Obby terminé avec succès !")
+    end
+end)
+
+print("[Delta Obby] Génération terminée ! Amusez-vous bien avec Delta.")
+`;
+
+            document.getElementById('luaCodeOutput').value = lua.trim();
+            updateLineNumbers();
+        }
+
+        function updateLineNumbers() {
+            const textarea = document.getElementById('luaCodeOutput');
+            const lines = textarea.value.split('\n').length;
+            const lineNumbersDiv = document.getElementById('lineNumbers');
+            let html = '';
+            for (let i = 1; i <= Math.max(lines, 18); i++) {
+                html += `<span>${i}</span>`;
+            }
+            lineNumbersDiv.innerHTML = html;
+        }
+
+        function copyCode() {
+            const textarea = document.getElementById('luaCodeOutput');
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast();
+            } catch (err) {
+                console.error('Erreur lors de la copie', err);
+            }
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toastMessage');
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3500);
+        }
+
+        function resetOptions() {
+            document.getElementById('stageCount').value = 15;
+            document.getElementById('stageCountVal').innerText = '15';
+            document.getElementById('featureKillBricks').checked = true;
+            document.getElementById('featureLasers').checked = true;
+            document.getElementById('featureVanishing').checked = true;
+            document.getElementById('featureCheckpoints').checked = true;
+            setDifficulty('medium');
+        }
+
+        // Simulator animation logic
+        function runSimulatorSimulation() {
+            const overlay = document.getElementById('simOverlay');
+            overlay.style.opacity = '0';
+            setTimeout(() => { overlay.style.display = 'none'; }, 300);
+
+            const canvas = document.getElementById('simCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            function resizeCanvas() {
+                canvas.width = canvas.parentElement.clientWidth;
+                canvas.height = canvas.parentElement.clientHeight;
+            }
+            resizeCanvas();
+
+            let step = 0;
+            const totalStages = parseInt(document.getElementById('stageCount').value);
+            
+            function draw() {
+                ctx.fillStyle = '#07040f';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Draw grid perspective lines
+                ctx.strokeStyle = 'rgba(157, 78, 221, 0.15)';
+                ctx.lineWidth = 1;
+                for (let i = 0; i < canvas.width; i += 40) {
+                    ctx.beginPath();
+                    ctx.moveTo(i, 0);
+                    ctx.lineTo(i, canvas.height);
+                    ctx.stroke();
+                }
+
+                // Draw starting player
+                ctx.fillStyle = '#00f5ff';
+                ctx.beginPath();
+                ctx.arc(80, canvas.height / 2, 12, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '10px Inter';
+                ctx.fillText('Joueur (Delta)', 50, (canvas.height / 2) + 26);
+
+                // Draw obby platforms extending forward
+                const startX = 140;
+                const spacingX = Math.min(45, (canvas.width - 200) / totalStages);
+                
+                for (let i = 1; i <= Math.min(totalStages, Math.floor((canvas.width - 180) / spacingX)); i++) {
+                    const x = startX + (i * spacingX);
+                    const y = (canvas.height / 2) + Math.sin(i * 0.6) * 35;
+                    
+                    // Platform box
+                    ctx.fillStyle = i % 5 === 0 ? '#ff007f' : (i % 2 === 0 ? '#9d4edd' : '#00f5ff');
+                    ctx.fillRect(x - 12, y - 6, 24, 12);
+                    
+                    ctx.fillStyle = '#e5d9fd';
+                    ctx.font = '9px JetBrains Mono';
+                    ctx.fillText('#' + i, x - 8, y - 12);
+                }
+
+                requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        window.onload = function() {
+            generateScript();
+        };
+    </script>
+</body>
+</html>
